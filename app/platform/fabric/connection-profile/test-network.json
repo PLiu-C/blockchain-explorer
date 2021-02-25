@@ -13,16 +13,17 @@
 		"connection": {
 			"timeout": {
 				"peer": {
-					"endorser": "300"
+					"endorser": "3000"
 				},
-				"orderer": "300"
+				"orderer": "3000"
 			}
 		}
 	},
 	"channels": {
-		"mychannel": {
+		"channelfft": {
 			"peers": {
-				"peer0.org1.example.com": {}
+				"peer0.blockchain.ccb.com": {},
+				"peer1.blockchain.ccb.com": {}
 			},
 			"connection": {
 				"timeout": {
@@ -39,23 +40,28 @@
 		"Org1MSP": {
 			"mspid": "Org1MSP",
 			"adminPrivateKey": {
-				"path": "/fabric-path/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk"
+				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/keystore/priv_sk"
 			},
-			"peers": ["peer0.org1.example.com"],
+			"peers": ["peer0.blockchain.ccb.com", "peer1.blockchain.ccb.com"],
 			"signedCert": {
-				"path": "/fabric-path/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem"
+				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/signcerts/Admin@blockchain.ccb.com-cert.pem"
 			}
 		}
 	},
 	"peers": {
-		"peer0.org1.example.com": {
+		"peer0.blockchain.ccb.com": {
 			"tlsCACerts": {
-				"path": "/fabric-path/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer0.blockchain.ccb.com/tls/ca.crt"
 			},
-			"url": "grpcs://localhost:7051",
-			"grpcOptions": {
-				"ssl-target-name-override": "peer0.org1.example.com"
-			}
+			"url": "grpcs://peer0.blockchain.ccb.com:7051",
+			"grpcOptions": {}
+		},
+		"peer1.blockchain.ccb.com": {
+			"tlsCACerts": {
+				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer1.blockchain.ccb.com/tls/ca.crt"
+			},
+			"url": "grpcs://peer1.blockchain.ccb.com:7151",
+			"grpcOptions": {}
 		}
 	}
 }
