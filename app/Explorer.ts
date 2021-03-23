@@ -21,7 +21,7 @@ import { authCheckMiddleware } from './middleware/auth-check';
 import swaggerDocument from './swagger.json';
 import { ExplorerError } from './common/ExplorerError';
 import { localLoginStrategy } from './passport/local-login';
-import { opsroutes } from './rest/opsroutes';
+import { opsroutes } from './platform/fabric/rest/opsroutes';
 
 /**
  *

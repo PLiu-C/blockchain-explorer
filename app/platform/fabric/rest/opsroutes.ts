@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Request, Response } from 'express-serve-static-core';
-import { fileUpload } from 'express-fileupload';
+//import { fileUpload } from 'express-fileupload';
 import { Platform } from '../Platform';
 import { execSync } from 'child_process';
 import { helper } from '../../../common/helper';
@@ -19,9 +19,9 @@ interface ExtRequest extends Request {
 }
 
 const logger = helper.getLogger('devops');
-const ajv = new Ajv().addSchema(require(`${__dirname}/schemas.json`), 'api');
+const ajv = new Ajv().addSchema(require(`${__dirname}/schema.json`), 'api');
 
-const workdir = process.env['FABTOOL_PATH'] || '.';
+const workdir = process.env.FABTOOL_PATH || '.';
 
 const outfolder = path.join(workdir, 'output');
 const out_ccpacks = path.join(outfolder, 'ccpacks');
