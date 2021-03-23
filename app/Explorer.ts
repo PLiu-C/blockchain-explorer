@@ -21,6 +21,7 @@ import { authCheckMiddleware } from './middleware/auth-check';
 import swaggerDocument from './swagger.json';
 import { ExplorerError } from './common/ExplorerError';
 import { localLoginStrategy } from './passport/local-login';
+import { opsroutes } from './rest/opsroutes';
 
 /**
  *
@@ -127,6 +128,10 @@ export class Explorer {
 
 			this.app.use('/auth', authrouter);
 			this.app.use('/api', apirouter);
+
+			const opsrouter = Express.Router();
+			await opsroutes(opsrouter, platform);
+			this.app.use('/api/ops/fabric', opsrouter);
 
 			// Initializing sync listener
 			platform.initializeListener(explorerconfig.sync);
