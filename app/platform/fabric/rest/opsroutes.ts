@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Request, Response } from 'express-serve-static-core';
+import { Request } from 'express-serve-static-core';
 //import { fileUpload } from 'express-fileupload';
 import { Platform } from '../Platform';
 import { execSync } from 'child_process';
@@ -31,8 +31,8 @@ const out_cryptos = path.join(outfolder, '../crypto-config');
 class OpsError extends Error {
 	code: number;
 
-	constructor(code: number, ...params: any) {
-		super(...params);
+	constructor(code: number, error: Error|String|undefined) {
+		super(error?.toString());
 		if (Error.captureStackTrace) {
 			Error.captureStackTrace(this, OpsError);
 		}
@@ -43,28 +43,24 @@ class OpsError extends Error {
 
 function sh(cmd: string, args: string[]) {
 	const options = { cwd: workdir, shell: '/bin/bash' };
-	cmd = `${cmd} ${args.join(' ')}`;
-	logger.info(`*** Running ${cmd} ***`);
+	cmd = `./scripts/${cmd}.sh ${args.join(' ')}`;
+	logger.info(`*** Workdir: ${workdir}, Running ${cmd} ***`);
 	try {
 		return execSync(cmd, options); // if anything wrong (incl. nonzero exit code), throw exception
 	} catch (err) {
-		throw new OpsError(500);
+		throw new OpsError(500, err);
 	}
 }
 
-function set_api(
-	path: string,
-	router: Router,
-	arg_provider: (body: object) => string[] | null
-) {
+function set_api(path: string,	router: Router,	arg_provider: (body: object) => string[] | null): void {
 	router.post(path, (req, res) => {
 		try {
-			const fcn = `api${path.replace('/', '_')}.sh`;
+			const fcn = `api${path.replace(/\//g, '_')}`;
 			if (!ajv.validate(`api#/definitions/${fcn}`, req.body)) {
-				throw new OpsError(400);
+				throw new OpsError(400, ajv.errors && ajv.errors.length ? ajv.errors[0].toString() : '');
 			}
 			const args = arg_provider(req.body);
-			const stdout = sh(fcn, args);
+			const stdout = sh(fcn, args).toString();
 			logger.info(stdout);
 			res.status(201).send(stdout);
 		} catch (err) {

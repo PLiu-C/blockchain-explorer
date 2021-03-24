@@ -15,10 +15,10 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost:8080"
+			"url": "http://10.211.55.3:8080"
 		},
 		{
-			"url": "https://localhost:8080"
+			"url": "http://localhost:8080"
 		}
 	],
 	"tags": [
@@ -41,6 +41,14 @@
 		{
 			"name": "Transactions",
 			"description": "Everything about your transactions"
+		},
+		{ 
+			"name": "Channel Ops",
+			"description": "Channel related operations"
+		},
+		{ 
+			"name": "Chaincode Ops",
+			"description": "Chaincode related operations"
 		}
 	],
 	"paths": {
@@ -1014,13 +1022,14 @@
 			}
 		},
 
+
 		"/api/ops/fabric/channel/create": {
 			"post": {
-				"tags": ["Channels"],
+				"tags": ["Channel Ops"],
 				"summary": "Create a channel",
 				"operationId": "createChannel",
 				"requestBody": {
-					"description": "create an channel",
+					"description": "create a channel",
 					"content": {
 						"application/json": {
 							"schema": {
@@ -1054,8 +1063,174 @@
 					}
 				]
 			}
-		}
+		},
+		"/api/ops/fabric/channel/join": {
+			"post": {
+				"tags": ["Channel Ops"],
+				"summary": "Join peers into a channel",
+				"operationId": "joinChannel",
+				"requestBody": {
+					"description": "join a channel",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/api_channel_join"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {}
+					},
+					"401": {
+						"description": "UnAuthorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {}
+					}
+				},
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/api/ops/fabric/chaincode/install": {
+			"post": {
+				"tags": ["Chaincode Ops"],
+				"summary": "Install chaincode into specified peers",
+				"operationId": "installChaincode",
+				"requestBody": {
+					"description": "join a channel",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/api_chaincode_install"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {}
+					},
+					"401": {
+						"description": "UnAuthorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {}
+					}
+				},
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/api/ops/fabric/chaincode/instantiate": {
+			"post": {
+				"tags": ["Chaincode Ops"],
+				"summary": "Insantiate a chaincode on a channel",
+				"operationId": "instantiateChaincode",
+				"requestBody": {
+					"description": "instantiate chaincode on a channel",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/api_chaincode_instantiate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {}
+					},
+					"401": {
+						"description": "UnAuthorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {}
+					}
+				},
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/api/ops/fabric/chaincode/update": {
+			"post": {
+				"tags": ["Chaincode Ops"],
+				"summary": "Update chaincode on a channel",
+				"operationId": "updateChaincode",
+				"requestBody": {
+					"description": "update chaincode",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/api_chaincode_update"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {}
+					},
+					"401": {
+						"description": "UnAuthorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {}
+					}
+				},
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+
 	},
+
 	"components": {
 		"schemas": {
 			"login": {
@@ -1098,6 +1273,7 @@
 				}
 			},
 
+			
 			"api_channel_create": {
 				"type": "object",
 				"properties": {
@@ -1105,9 +1281,68 @@
 					"profile": { "type": "string" }
 				},
 				"required": ["channel", "profile"]
-			}
+			},
+
+			"api_channel_join": {
+				"type": "object",
+				"properties": {
+					"channel": { "type": "string", "minLength": 1 },
+					"org": { "type": "integer" },
+					"peers": { "type": "array", "items": { "type": "integer" }, "minItems": 1 }
+				},
+				"required": ["channel", "org", "peers"]
+			},
 	
+			"api_channel_update_anchor_peer": {
+				"type": "object",
+				"properties": {
+					"channel": { "type": "string", "minLength": 1 },
+					"org": { "type": "integer" },
+					"peers": { "type": "array", "items": { "type": "integer" }, "minItems": 1 }
+				},
+				"required": ["channel", "org", "peers"]
+			},
+	
+			"api_chaincode_install": {
+				"type": "object",
+				"properties": {
+					"org": { "type": "integer" },
+					"peers": { "type": "array", "items": { "type": "integer" }, "minItems": 1 },
+					"ccname": { "type": "string", "minLength": 1 },
+					"ccver": { "type": "string", "minLength": 5 },
+					"cclang": { "type": "string", "enum": ["go", "node", "java"] },
+					"ccdata": { "type": "string", "minLength": 2 }
+				},
+				"required": ["org", "peers", "ccname", "ccver", "cclang", "ccdata"]
+			},
+	
+			"api_chaincode_upgrade": {
+				"type": "object",
+				"properties": {
+					"channel": { "type": "string", "minLength": 1 },
+					"org": { "type": "integer" },
+					"peer": { "type": "integer" },
+					"ccname": { "type": "string", "minLength": 1 },
+					"ccver": { "type": "string", "minLength": 5 },
+					"ccargs": { "type": "string" }
+				},
+				"required": ["channel", "org", "peer", "ccname", "ccver"]
+			},
+	
+			"api_chaincode_instantiate": {
+				"type": "object",
+				"properties": {
+					"channel": { "type": "string", "minLength": 1 },
+					"org": { "type": "integer" },
+					"peer": { "type": "integer" },
+					"ccname": { "type": "string", "minLength": 1 },
+					"ccver": { "type": "string", "minLength": 5 },
+					"ccargs": { "type": "string" }
+				},
+				"required": ["channel", "org", "peer", "ccname", "ccver"]
+			}
 		},
+		
 		"securitySchemes": {
 			"bearer": {
 				"type": "http",

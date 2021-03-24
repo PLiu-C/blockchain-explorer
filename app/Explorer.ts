@@ -112,6 +112,7 @@ export class Explorer {
 			// Make sure that platform instance will be referred after its initialization
 			passport.use('local-login', localLoginStrategy(platform));
 
+			this.app.use(require('cors')());
 			this.app.use('/api', authCheckMiddleware);
 
 			const authrouter = Express.Router();

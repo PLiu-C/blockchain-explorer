@@ -338,19 +338,21 @@ export class FabricGateway {
 		let resultJson = fabprotos.protos.ChaincodeQueryResponse.decode(result);
 		if (resultJson.chaincodes.length <= 0) {
 			resultJson = { chaincodes: [], toJSON: null };
-			contract = network.getContract('_lifecycle');
-			result = await contract.evaluateTransaction('QueryInstalledChaincodes', '');
-			const decodedReult = fabprotos.lifecycle.QueryInstalledChaincodesResult.decode(
-				result
-			);
-			for (const cc of decodedReult.installed_chaincodes) {
-				logger.info('1:', cc);
-				const ccInfo = cc.references[channelName];
-				if (ccInfo !== undefined) {
-					logger.info('2:', ccInfo);
-					resultJson.chaincodes = concat(resultJson.chaincodes, ccInfo.chaincodes);
+			try {
+				contract = network.getContract('_lifecycle');
+				result = await contract.evaluateTransaction('QueryInstalledChaincodes', '');
+				const decodedReult = fabprotos.lifecycle.QueryInstalledChaincodesResult.decode(
+					result
+				);
+				for (const cc of decodedReult.installed_chaincodes) {
+					logger.info('1:', cc);
+					const ccInfo = cc.references[channelName];
+					if (ccInfo !== undefined) {
+						logger.info('2:', ccInfo);
+						resultJson.chaincodes = concat(resultJson.chaincodes, ccInfo.chaincodes);
+					}
 				}
-			}
+			} catch (err) {}
 		}
 		logger.debug('queryInstantiatedChaincodes', resultJson);
 		return resultJson;
