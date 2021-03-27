@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { Request } from 'express-serve-static-core';
-//import { fileUpload } from 'express-fileupload';
+import { Request, Response } from 'express-serve-static-core';
+import multer from 'multer';
 import { Platform } from '../Platform';
 import { execSync } from 'child_process';
 import { helper } from '../../../common/helper';
 import Ajv from 'ajv';
-import * as path from 'path';
+import path from 'path';
 import fs from 'fs';
 
 /**
@@ -21,8 +21,14 @@ interface ExtRequest extends Request {
 const logger = helper.getLogger('devops');
 const ajv = new Ajv().addSchema(require(`${__dirname}/schema.json`), 'api');
 
-const workdir = process.env.FABTOOL_PATH || '.';
+const upload = multer({
+  dest: path.join('public', 'uploads'),
+  fileFilter: (req, file, callback) => {
+    callback(null, ['application/x-gzip'].includes(file.mimetype));
+  }
+});
 
+const workdir = process.env.FABTOOL_PATH || '.';
 const outfolder = path.join(workdir, 'output');
 const out_ccpacks = path.join(outfolder, 'ccpacks');
 const out_artifacts = path.join(outfolder, 'artifacts');
@@ -52,22 +58,24 @@ function sh(cmd: string, args: string[]) {
 	}
 }
 
-function set_api(path: string,	router: Router,	arg_provider: (body: object) => string[] | null): void {
-	router.post(path, (req, res) => {
+function runapi(arg_provider: (req: Request) => string[] | null) {
+    return (req: Request, res: Response) => {
+		let stdout = '';
 		try {
+			const path = req.path;
 			const fcn = `api${path.replace(/\//g, '_')}`;
 			if (!ajv.validate(`api#/definitions/${fcn}`, req.body)) {
 				throw new OpsError(400, ajv.errors && ajv.errors.length ? ajv.errors[0].toString() : '');
 			}
-			const args = arg_provider(req.body);
-			const stdout = sh(fcn, args).toString();
-			logger.info(stdout);
+			const args = arg_provider(req);
+			stdout = sh(fcn, args).toString();
 			res.status(201).send(stdout);
 		} catch (err) {
-			res.status(err.code ?? 500).send(err);
+			res.status(err.code ?? 500).json({error: err.toString(), console: stdout});
 		}
-	});
+	}
 }
+
 
 /**
  *
@@ -87,50 +95,60 @@ export function opsroutes(router: Router, platform: Platform) {
 	 * {
 	 * }
 	 */
-	set_api('/channel/create', router, (body: any) => {
-		return [body.channel, body.profile || ''];
-	});
+	router.post('/channel/create', runapi((req: Request) => {
+		return [req.body.channel, req.body.profile || ''];
+	}));
 
 	/**
 	 *   -d '{"channel":"mychannel", "org":1, "peers":[0,1,2]}'
 	 */
-	set_api('/channel/join', router, (body: any) => {
-		return [body.channel, body.org, ...body.peers];
-	});
+	router.post('/channel/join', runapi((req: Request) => {
+		return [req.body.channel, req.body.org, ...req.body.peers];
+	}));
 
-	set_api('/channel/update_anchor_peer', router, (body: any) => {
-		return [body.channel, body.profile, body.org, ...body.peers];
-	});
+	router.post('/channel/update_anchor_peer', runapi((req: Request) => {
+		return [req.body.channel, req.body.profile, req.body.org, ...req.body.peers];
+	}));
 
 	/**
-	 *  -d '{"channel": "mychannel", "org":1, "peers":[0,1,2], "ccname":"fft", "cclang":"node", "ccdata":"<base64 data>"}
+	 *  req.body: '{"channel": "mychannel", "org":1, "peers":[0,1,2], "ccname":"fft", "cclang":"node"}
 	 */
-	set_api('/chaincode/install', router, (body: any) => {
-		const content = Buffer.from(body.ccdata, 'base64');
-		fs.writeFileSync(
-			`${out_ccpacks}/${body.ccname}-${body.ccver}.tar.xz`,
-			content
-		);
-		return [body.org, body.ccname, body.ccver, body.cclang, ...body.peers];
-	});
+	router.post('/chaincode/install',
+		upload.single('ccpackfile'), 
+		(req, res, next) => {
+			if (req.body) {
+				req.body.org = parseInt(req.body.org);
+				req.body.peers = req.body.peers.split(',').map((x) => parseInt(x));
+				req.body.ccname = req.body.ccname.trim();
+				req.body.ccver = req.body.ccver.trim();
+			}
+			next();
+		},
+		runapi((req: Request) => {
+			const body = req.body;
+			fs.renameSync((req as any).file.path, `${out_ccpacks}/${body.ccname}-${body.ccver}.tar.gz`);
+			return [body.org, body.ccname, body.ccver, body.cclang, ...body.peers];
+		})
+	);
 
-	set_api('/chaincode/instantiate', router, (body: any) => {
+	router.post('/chaincode/instantiate', runapi((req: Request) => {
 		return [
-			body.channel,
-			body.org,
-			body.peer.body.ccname,
-			body.ccver,
-			body.ccargs ?? '{"Args":[]}'
+			req.body.channel,
+			req.body.org,
+			req.body.peer,
+			req.body.ccname,
+			req.body.ccver,
+			req.body.ccargs ?? '{"args":["init"]}'
 		];
-	});
+	}));
 
-	set_api('/chaincode/upgrade', router, (body: any) => {
+	router.post('/chaincode/upgrade', runapi((req:Request) => {
 		return [
-			body.channel,
-			body.org,
-			body.peer.body.ccname,
-			body.ccver,
-			body.ccargs ?? '{"Args":[]}'
+			req.body.channel,
+			req.body.org,
+			req.body.peer.body.ccname,
+			req.body.ccver,
+			req.body.ccargs ?? '{"Args":[]}'
 		];
-	});
+	}));
 }

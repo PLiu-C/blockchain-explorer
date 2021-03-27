@@ -1,17 +1,11 @@
 {
-	"openapi": "3.0.1",
+	"openapi": "3.0.0",
 	"info": {
 		"title": "Fabric Blockchain DevOps REST API Swagger",
 		"description": "Rest API for fabric DevOps",
-		"termsOfService": "http://swagger.io/terms/",
 		"contact": {
 			"name": "Runchain Fintech"
 		},
-		"license": {
-			"name": "Apache 2.0",
-			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-		},
-		"version": "1.0.0"
 	},
 	"servers": [
 		{
@@ -43,11 +37,11 @@
 			"description": "Everything about your transactions"
 		},
 		{ 
-			"name": "Channel Ops",
+			"name": "ChannelOps",
 			"description": "Channel related operations"
 		},
 		{ 
-			"name": "Chaincode Ops",
+			"name": "ChaincodeOps",
 			"description": "Chaincode related operations"
 		}
 	],
@@ -1025,7 +1019,7 @@
 
 		"/api/ops/fabric/channel/create": {
 			"post": {
-				"tags": ["Channel Ops"],
+				"tags": ["ChannelOps"],
 				"summary": "Create a channel",
 				"operationId": "createChannel",
 				"requestBody": {
@@ -1066,7 +1060,7 @@
 		},
 		"/api/ops/fabric/channel/join": {
 			"post": {
-				"tags": ["Channel Ops"],
+				"tags": ["ChannelOps"],
 				"summary": "Join peers into a channel",
 				"operationId": "joinChannel",
 				"requestBody": {
@@ -1107,13 +1101,12 @@
 		},
 		"/api/ops/fabric/chaincode/install": {
 			"post": {
-				"tags": ["Chaincode Ops"],
+				"tags": ["ChaincodeOps"],
 				"summary": "Install chaincode into specified peers",
 				"operationId": "installChaincode",
 				"requestBody": {
-					"description": "join a channel",
 					"content": {
-						"application/json": {
+						"multipart/form-data": {
 							"schema": {
 								"$ref": "#/components/schemas/api_chaincode_install"
 							}
@@ -1148,7 +1141,7 @@
 		},
 		"/api/ops/fabric/chaincode/instantiate": {
 			"post": {
-				"tags": ["Chaincode Ops"],
+				"tags": ["ChaincodeOps"],
 				"summary": "Insantiate a chaincode on a channel",
 				"operationId": "instantiateChaincode",
 				"requestBody": {
@@ -1189,7 +1182,7 @@
 		},
 		"/api/ops/fabric/chaincode/update": {
 			"post": {
-				"tags": ["Chaincode Ops"],
+				"tags": ["ChaincodeOps"],
 				"summary": "Update chaincode on a channel",
 				"operationId": "updateChaincode",
 				"requestBody": {
@@ -1311,9 +1304,9 @@
 					"ccname": { "type": "string", "minLength": 1 },
 					"ccver": { "type": "string", "minLength": 5 },
 					"cclang": { "type": "string", "enum": ["go", "node", "java"] },
-					"ccdata": { "type": "string", "minLength": 2 }
+					"ccpackfile": { "type": "string", "format": "binary" }
 				},
-				"required": ["org", "peers", "ccname", "ccver", "cclang", "ccdata"]
+				"required": ["org", "peers", "ccname", "ccver", "cclang", "ccpackfile"]
 			},
 	
 			"api_chaincode_upgrade": {

@@ -5,8 +5,8 @@
 	"client": {
 		"tlsEnable": true,
 		"adminCredential": {
-			"id": "exploreradmin",
-			"password": "exploreradminpw"
+			"id": "admin",
+			"password": "admin"
 		},
 		"enableAuthentication": true,
 		"organization": "Org1MSP",
@@ -40,25 +40,25 @@
 		"Org1MSP": {
 			"mspid": "Org1MSP",
 			"adminPrivateKey": {
-				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/keystore/priv_sk"
+				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/keystore/2e745da2709d8b95ab868b970584bb00329b80389960476d216aa0cb0db59800_sk"
 			},
 			"peers": ["peer0.blockchain.ccb.com", "peer1.blockchain.ccb.com"],
 			"signedCert": {
-				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/signcerts/Admin@blockchain.ccb.com-cert.pem"
+				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/signcerts/Admin@blockchain.ccb.com-cert.pem"
 			}
 		}
 	},
 	"peers": {
 		"peer0.blockchain.ccb.com": {
 			"tlsCACerts": {
-				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer0.blockchain.ccb.com/tls/ca.crt"
+				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer0.blockchain.ccb.com/tls/ca.crt"
 			},
 			"url": "grpcs://peer0.blockchain.ccb.com:7051",
 			"grpcOptions": {}
 		},
 		"peer1.blockchain.ccb.com": {
 			"tlsCACerts": {
-				"path": "/home/pliu/FabricAddOrg/test-network/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer1.blockchain.ccb.com/tls/ca.crt"
+				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/peers/peer1.blockchain.ccb.com/tls/ca.crt"
 			},
 			"url": "grpcs://peer1.blockchain.ccb.com:7151",
 			"grpcOptions": {}
