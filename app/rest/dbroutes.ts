@@ -154,7 +154,7 @@ export function dbroutes(router: Router, platform: Platform) {
 						to,
 						orgs
 					)
-					.then(handleResult(req, res));
+					.then(paginate(req, res));
 			} else {
 				return requtil.invalidRequest(req, res);
 			}
@@ -254,7 +254,7 @@ export function dbroutes(router: Router, platform: Platform) {
 						to,
 						orgs
 					)
-					.then(handleResult(req, res));
+					.then(paginate(req, res));
 			}
 			return requtil.invalidRequest(req, res);
 		}
@@ -356,4 +356,40 @@ export function dbroutes(router: Router, platform: Platform) {
 		}
 		return requtil.invalidRequest(req, res);
 	});
+
+
+	function paginate(req, res) {
+		return (rows: any[]) => {
+			if (!rows?.length)
+				return requtil.notFound(req, res);
+
+			const page = parseInt(req?.query?.page)
+			const limit = parseInt(req?.query?.limit)
+		
+			if (isNaN(page) || isNaN(limit)) 
+				return handleResult(req, res)(rows);
+
+			const startIndex = (page - 1) * limit
+			const endIndex = page * limit
+		
+			const result: {[key:string]: any} = {};
+		
+			if (endIndex < rows.length) {
+				result.next = {
+					page: page + 1,
+					limit: limit
+				}
+			}
+
+			if (startIndex > 0) {
+				result.prev = {
+					page: page - 1,
+					limit: limit
+				}
+			}
+
+			result.rows = rows.slice(startIndex, endIndex);
+			res.status(200).json(result);
+		}
+	}
 } // End dbroutes()

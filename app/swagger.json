@@ -1,15 +1,18 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-		"title": "Fabric Blockchain DevOps REST API Swagger",
-		"description": "Rest API for fabric DevOps",
+		"title": "Fabric Blockchain DevOps REST API",
+		"description": "Runchain Fintech March 2020",
 		"contact": {
-			"name": "Runchain Fintech"
+			"name": "Runchain Fintech 2020"
 		},
 	},
 	"servers": [
 		{
 			"url": "http://10.211.55.3:8080"
+		},
+		{
+            "url": "http://weboa.hoperun.com:10111"
 		},
 		{
 			"url": "http://localhost:8080"
@@ -626,7 +629,57 @@
 						"schema": {
 							"type": "string"
 						}
-					}
+					},
+
+					{
+						"name": "from",
+						"in": "query",
+						"description": "Start date-time (default 1 day before now)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "to",
+						"in": "query",
+						"description": "End date-time (default now)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "orgs",
+						"in": "query",
+						"description": "Array of org mspids",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
+					},
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "Number of rows per page",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "page number",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					} 
+
 				],
 				"responses": {
 					"200": {
@@ -712,8 +765,56 @@
 					{
 						"name": "number",
 						"in": "path",
-						"description": "Please give the number value",
+						"description": "Please give the block number (0-based)",
 						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "from",
+						"in": "query",
+						"description": "Start date-time (default 1 day before now)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "to",
+						"in": "query",
+						"description": "End date-time (default now)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "orgs",
+						"in": "query",
+						"description": "Array of org mspids",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
+					},
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "Number of rows per page",
+						"required": false,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "page number",
+						"required": false,
 						"schema": {
 							"type": "integer"
 						}

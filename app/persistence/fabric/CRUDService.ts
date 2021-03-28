@@ -127,7 +127,9 @@ export class CRUDService {
 		blockNum: any,
 		from: any,
 		to: any,
-		orgs: string[]
+		orgs: string[],
+		limit: number,
+        offset: number
 	) {
 		const values = [channel_genesis_hash, network_name, from, to];
 		let byOrgs = '';

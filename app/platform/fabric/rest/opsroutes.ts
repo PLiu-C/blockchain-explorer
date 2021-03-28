@@ -34,11 +34,23 @@ const out_ccpacks = path.join(outfolder, 'ccpacks');
 const out_artifacts = path.join(outfolder, 'artifacts');
 const out_cryptos = path.join(outfolder, '../crypto-config');
 
+
 class OpsError extends Error {
 	code: number;
+	stdout?: string;
+	stderr?: string
 
 	constructor(code: number, error: Error|String|undefined) {
 		super(error?.toString());
+		if (error) {
+			const e = error as any;
+			if (e.stdout) {
+				this.stdout = e.stdout.toString();
+			}
+			if (e.stderr) {
+				this.stderr = e.stderr.toString();
+			}
+		}
 		if (Error.captureStackTrace) {
 			Error.captureStackTrace(this, OpsError);
 		}
@@ -60,7 +72,6 @@ function sh(cmd: string, args: string[]) {
 
 function runapi(arg_provider: (req: Request) => string[] | null) {
     return (req: Request, res: Response) => {
-		let stdout = '';
 		try {
 			const path = req.path;
 			const fcn = `api${path.replace(/\//g, '_')}`;
@@ -68,10 +79,10 @@ function runapi(arg_provider: (req: Request) => string[] | null) {
 				throw new OpsError(400, ajv.errors && ajv.errors.length ? ajv.errors[0].toString() : '');
 			}
 			const args = arg_provider(req);
-			stdout = sh(fcn, args).toString();
+			const stdout = sh(fcn, args).toString();
 			res.status(201).send(stdout);
 		} catch (err) {
-			res.status(err.code ?? 500).json({error: err.toString(), console: stdout});
+			res.status(err.code ?? 500).json({error: err.toString(), console: err.stdout});
 		}
 	}
 }
