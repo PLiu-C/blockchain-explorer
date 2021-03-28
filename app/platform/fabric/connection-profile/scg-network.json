@@ -1,0 +1,77 @@
+{
+	"name": "scg-network",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "admin",
+			"password": "admin"
+		},
+		"enableAuthentication": false,
+		"organization": "Org1MSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "3000"
+				},
+				"orderer": "3000"
+			}
+		}
+	},
+	"channels": {
+		"channelscg": {
+			"peers": {
+				"peer0.org1.finblockchain.cn": {},
+				"peer0.org2.finblockchain.cn": {}
+			},
+			"connection": {
+				"timeout": {
+					"peer": {
+						"endorser": "6000",
+						"eventHub": "6000",
+						"eventReg": "6000"
+					}
+				}
+			}
+		}
+	},
+	"organizations": {
+		"Org1MSP": {
+			"mspid": "Org1MSP",
+			"adminPrivateKey": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org1.finblockchain.cn/users/Admin@org1.finblockchain.cn/msp/keystore/ad8dc0d22ea19c011e15b3ee3f54c37ab34e7b867c7f5cb6b622197fd263189c_sk"
+			},
+			"peers": ["peer0.org1.finblockchain.cn"],
+			"signedCert": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org1.finblockchain.cn/users/Admin@org1.finblockchain.cn/msp/signcerts/Admin@org1.finblockchain.cn-cert.pem"
+			}
+		}
+		"Org2MSP": {
+			"mspid": "Org2MSP",
+			"adminPrivateKey": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org2.finblockchain.cn/users/Admin@org2.finblockchain.cn/msp/keystore/4861662b385dde15e04c5de3c45fbdd9d6942af183ed22db60a8e7c202f88f25_sk"
+			},
+			"peers": ["peer0.org2.finblockchain.cn"],
+			"signedCert": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org2.finblockchain.cn/users/Admin@org1.finblockchain.cn/msp/signcerts/Admin@org2.finblockchain.cn-cert.pem"
+			}
+		}
+	},
+	"peers": {
+		"peer0.org1.finblockchain.cn": {
+			"tlsCACerts": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org1.finblockchain.cn/peers/peer0.org1.finblockchain.cn/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.org1.finblockchain.cn:7051",
+			"grpcOptions": {}
+		},
+		"peer0.org2.finblockchain.cn": {
+			"tlsCACerts": {
+				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org2.finblockchain.cn/peers/peer0.org2.finblockchain.cn/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.org2.finblockchain.cn:7051",
+			"grpcOptions": {}
+		}
+	}
+}

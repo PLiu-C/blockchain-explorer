@@ -1,8 +1,8 @@
 {
 	"network-configs": {
-		"test-network": {
-			"name": "Test Network",
-			"profile": "./connection-profile/test-network.json"
+		"scg-network": {
+			"name": "上海建工区块链",
+			"profile": "./connection-profile/scg-network.json"
 		}
 	},
 	"license": "Apache-2.0"
