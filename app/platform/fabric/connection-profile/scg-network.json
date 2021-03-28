@@ -46,7 +46,7 @@
 			"signedCert": {
 				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org1.finblockchain.cn/users/Admin@org1.finblockchain.cn/msp/signcerts/Admin@org1.finblockchain.cn-cert.pem"
 			}
-		}
+		},
 		"Org2MSP": {
 			"mspid": "Org2MSP",
 			"adminPrivateKey": {
@@ -64,14 +64,16 @@
 				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org1.finblockchain.cn/peers/peer0.org1.finblockchain.cn/tls/ca.crt"
 			},
 			"url": "grpcs://peer0.org1.finblockchain.cn:7051",
-			"grpcOptions": {}
+			"grpcOptions": {
+			}
 		},
 		"peer0.org2.finblockchain.cn": {
 			"tlsCACerts": {
 				"path": "/sandbox/FabricOps/FabTool/crypto-config/peerOrganizations/org2.finblockchain.cn/peers/peer0.org2.finblockchain.cn/tls/ca.crt"
 			},
 			"url": "grpcs://peer0.org2.finblockchain.cn:7051",
-			"grpcOptions": {}
+			"grpcOptions": {
+			}
 		}
 	}
 }

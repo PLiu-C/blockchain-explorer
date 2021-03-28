@@ -6,7 +6,7 @@ echo "Copying ENV variables into temp file..."
 export NVM_DIR="/home/pliu/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
-node processenv.js
+/home/pliu/.nvm/versions/node/v12.21.0/bin/node processenv.js
 if [ $( jq .DATABASE_USERNAME /tmp/process.env.json) == null ]; then
   export USER=$( jq .postgreSQL.username ../../../../explorerconfig.json )
 else

@@ -9,7 +9,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://10.211.55.3:8080"
+			"url": "http://10.10.255.44:8080"
 		},
 		{
             "url": "http://weboa.hoperun.com:10111"

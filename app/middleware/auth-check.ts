@@ -9,7 +9,7 @@ import config from '../explorerconfig.json';
  *  The Auth Checker middleware function.
  */
 export const authCheckMiddleware = (req, res, next) => {
-	req.network = 'test-network';
+	req.network = 'scg-network'; // TODO: This is hardcoding and stopgap! Remember remove them before prod
 	req.requestUserId = 'test';
 	return next();
 
