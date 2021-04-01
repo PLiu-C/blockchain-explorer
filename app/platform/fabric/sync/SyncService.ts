@@ -472,7 +472,8 @@ export class SyncServices {
 		}
 
 		if (this.blocksInProcess.includes(blockPro_key)) {
-			throw new ExplorerError('Block already in processing');
+			logger.warn("processBlockEvent: Block already in processing, direct return!");
+			return true;
 		}
 		this.blocksInProcess.push(blockPro_key);
 

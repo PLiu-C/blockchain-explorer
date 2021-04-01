@@ -19,6 +19,6 @@ export LOG_CONSOLE_STDOUT=${LOG_CONSOLE_STDOUT:-false}
 
 export DISCOVERY_AS_LOCALHOST=${DISCOVERY_AS_LOCALHOST:-flase}
 export EXPLORER_APP_ROOT=${EXPLORER_APP_ROOT:-dist}
-export FABTOOL_PATH=/sandbox/FabricOps/FabTool"
+export FABTOOL_PATH=${FABTOOL_PATH:-../FabricOps/FabTool}
 
 node ${EXPLORER_APP_ROOT}/main.js name - hyperledger-explorer &

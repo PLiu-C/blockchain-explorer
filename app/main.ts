@@ -115,16 +115,13 @@ async function startExplorer() {
 	}
 	const broadcaster = new Broadcaster(server);
 	await explorer.initialize(broadcaster);
-	explorer
-		.getApp()
-		.use(express.static(path.join(__dirname, '..', 'client/build')));
+	// explorer
+	// 	.getApp()
+	// 	.use(express.static(path.join(__dirname, '..', 'client/build')));
 
 	// ============= start server =======================
 	server.listen(port, () => {
-		logger.info(
-			`Please open web browser to access ：${protocol}://${host}:${port}/`
-		);
-		logger.info(`pid is ${process.pid}`);
+		logger.info(`FabApi server started, pid is ${process.pid}`);
 	});
 }
 
