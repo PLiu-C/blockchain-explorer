@@ -110,7 +110,7 @@ describe('processBlockEvent', () => {
 	it('should return without error', async () => {
 		const stubClient = setupClient();
 
-		await expect(sync.processBlockEvent(stubClient, stubBlock)).eventually.to.be
+		await expect(sync.processBlockEvent(stubClient as any, stubBlock)).eventually.to.be
 			.true;
 		sinon.assert.calledOnce(stubPlatform.send);
 		sinon.assert.calledWith(
@@ -124,7 +124,7 @@ describe('processBlockEvent', () => {
 		const stubClient = setupClient();
 		sync.blocksInProcess = ['mychannel_9'];
 
-		await expect(sync.processBlockEvent(stubClient, stubBlock))
+		await expect(sync.processBlockEvent(stubClient as any, stubBlock))
 			.to.eventually.be.rejectedWith('Block already in processing')
 			.and.be.an.instanceOf(ExplorerError);
 		sinon.assert.notCalled(stubPlatform.send);
@@ -140,7 +140,7 @@ describe('processBlockEvent', () => {
 		const spyInsertDiscoveredCH = sinon.spy(sync, 'insertDiscoveredChannel');
 
 		const clock = sinon.useFakeTimers();
-		await expect(sync.processBlockEvent(stubClient, stubBlock))
+		await expect(sync.processBlockEvent(stubClient as any, stubBlock))
 			.to.eventually.be.rejectedWith('mychannel has not been inserted yet')
 			.and.be.an.instanceOf(ExplorerError);
 		clock.tick(20000);
@@ -156,7 +156,7 @@ describe('processBlockEvent', () => {
 		const spyUpdateDiscoveredCH = sinon.spy(sync, 'updateDiscoveredChannel');
 
 		const clock = sinon.useFakeTimers();
-		await expect(sync.processBlockEvent(stubClient, stubConfigBlock)).to
+		await expect(sync.processBlockEvent(stubClient as any, stubConfigBlock)).to
 			.eventually.to.be.true;
 		clock.tick(20000);
 

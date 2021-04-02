@@ -4,7 +4,7 @@
 import { explorerConst } from '../common/ExplorerConst';
 import { explorerError } from '../common/ExplorerMessage';
 import { ExplorerError } from '../common/ExplorerError';
-import { ExplorerSender } from './sender/ExplorerSender';
+import { Sender } from './Sender';
 import { SyncPlatform } from '../platform/fabric/sync/SyncPlatform';
 
 /**
@@ -23,7 +23,7 @@ export class SyncBuilder {
 	 * @returns
 	 * @memberof SyncBuilder
 	 */
-	static async build(pltfrm: string, persistence: any, sender: ExplorerSender) {
+	static async build(pltfrm: string, persistence: any, sender: Sender) {
 		if (pltfrm === explorerConst.PLATFORM_FABRIC) {
 			const platform = new SyncPlatform(persistence, sender);
 			return platform;

@@ -1,4 +1,11 @@
 {
+	"server": {
+		"sslEnabled": false,
+		"sslCertsPath": "ssl-certs",
+		"host": "localhost",
+		"port": "8080",
+		"license": "Apache-2.0"
+	},	
 	"persistence": "postgreSQL",
 	"platforms": ["fabric"],
 	"postgreSQL": {
@@ -9,12 +16,11 @@
 		"passwd": "2820"
 	},
 	"sync": {
-		"type": "local",
 		"platform": "fabric",
 		"blocksSyncTime": "1"
 	},
 	"jwt": {
 		"secret": "a secret phrase!!",
-		"expiresIn": "2h"
+		"expiresIn": "100h"
 	}
 }

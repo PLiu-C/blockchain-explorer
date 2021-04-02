@@ -719,9 +719,9 @@ export class MetricService {
 	 * @memberof MetricService
 	 */
 	async findMissingBlockNumber(
-		network_name: any,
-		channel_genesis_hash: any,
-		maxHeight: any
+		network_name: string,
+		channel_genesis_hash: string,
+		maxHeight: number
 	) {
 		const sqlQuery = `SELECT s.id AS missing_id
     FROM generate_series(0, $1) s(id) WHERE NOT EXISTS (SELECT 1 FROM blocks WHERE blocknum = s.id and channel_genesis_hash=$2 and network_name=$3 )`;

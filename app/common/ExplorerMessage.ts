@@ -7,8 +7,8 @@
  */
 /* eslint-disable no-shadow */
 export enum explorerError {
-	ERROR_1001 = 'Missing persistence type property [persistence] in explorerconfig.json',
-	ERROR_1002 = 'Missing database configuration property [%s] in explorerconfig.json',
+	ERROR_1001 = 'Missing persistence type property [persistence] in apiconfig.json',
+	ERROR_1002 = 'Missing database configuration property [%s] in apiconfig.json',
 	ERROR_1003 = 'Persistence implementation is not found for %s',
 	ERROR_1004 = 'Platform implementation is not found for %s',
 	ERROR_1005 = 'Platform implementation is not found for synch process %s',

@@ -6,10 +6,14 @@ import { helper } from './common/helper';
 import { explorerConst } from './common/ExplorerConst';
 import { explorerError } from './common/ExplorerMessage';
 import { ExplorerError } from './common/ExplorerError';
-import syncconfig from './explorerconfig.json';
+import syncconfig from './apiconfig.json';
 import { SyncBuilder } from './sync/SyncBuilder';
 import { PersistenceFactory } from './persistence/PersistenceFactory';
-import { ExplorerSender } from './sync/sender/ExplorerSender';
+import { Sender } from './sync/Sender';
+
+import type { SyncPlatform, Persist } from './types';
+
+
 /* eslint-enable import/extensions */
 const logger = helper.getLogger('Synchronizer');
 
@@ -20,8 +24,8 @@ const logger = helper.getLogger('Synchronizer');
  */
 export class Synchronizer {
 	args: any;
-	persistence: any;
-	platform: any;
+	persistence: Persist;
+	platform: SyncPlatform;
 	/**
 	 * Creates an instance of Synchronizer.
 	 * @param {*} args
@@ -49,7 +53,7 @@ export class Synchronizer {
 			);
 		}
 
-		let pltfrm;
+		let pltfrm: string;
 		if (syncconfig && syncconfig.sync && syncconfig.sync.platform) {
 			pltfrm = syncconfig.sync.platform;
 		} else {
@@ -61,9 +65,8 @@ export class Synchronizer {
 			syncconfig[syncconfig[explorerConst.PERSISTENCE]]
 		);
 
-		const sender = new ExplorerSender(syncconfig.sync);
-		sender.initialize();
-		logger.debug(' Synchronizer initialized');
+		const sender = new Sender();
+		logger.debug('Synchronizer initialized');
 		this.platform = await SyncBuilder.build(pltfrm, this.persistence, sender);
 
 		this.platform.setPersistenceService();

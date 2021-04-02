@@ -8,6 +8,7 @@ import { ExplorerError } from '../../common/ExplorerError';
 import { explorerError } from '../../common/ExplorerMessage';
 import { FabricGateway } from '../../platform/fabric/gateway/FabricGateway';
 import * as FabricUtils from './utils/FabricUtils';
+import type { FabricConfig } from '../../types';
 
 const logger = helper.getLogger('FabricClient');
 
@@ -18,7 +19,7 @@ const logger = helper.getLogger('FabricClient');
  */
 export class FabricClient {
 	network_id: string;
-	fabricGateway: any;
+	fabricGateway: FabricGateway | null;
 	channelsGenHash: Map<string, any>;
 	config: any;
 	status: boolean;
@@ -29,7 +30,7 @@ export class FabricClient {
 	 * @param {FabricConfig} config
 	 * @memberof FabricClient
 	 */
-	constructor(config) {
+	constructor(config: FabricConfig) {
 		this.network_id = config.getNetworkId();
 		this.fabricGateway = null;
 		this.channelsGenHash = new Map();

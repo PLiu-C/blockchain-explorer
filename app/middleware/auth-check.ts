@@ -3,7 +3,7 @@
  */
 
 import * as jwt from 'jsonwebtoken';
-import config from '../explorerconfig.json';
+import config from '../apiconfig.json';
 
 /**
  *  The Auth Checker middleware function.

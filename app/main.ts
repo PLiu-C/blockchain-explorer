@@ -17,17 +17,17 @@ import url from 'url';
 import * as WebSocket from 'ws';
 import * as fs from 'fs';
 import { helper } from './common/helper';
-import appconfig from './appconfig.json';
+import apiconfig from './apiconfig.json';
 
 import { Explorer } from './Explorer';
 import { ExplorerError } from './common/ExplorerError';
 
 const logger = helper.getLogger('main');
 
-const sslEnabled = process.env.SSL_ENABLED || appconfig.sslEnabled;
-const sslCertsPath = process.env.SSL_CERTS_PATH || appconfig.sslCertsPath;
-const host = process.env.HOST || appconfig.host;
-const port = process.env.PORT || appconfig.port;
+const sslEnabled = process.env.SSL_ENABLED || apiconfig.server.sslEnabled;
+const sslCertsPath = process.env.SSL_CERTS_PATH || apiconfig.server.sslCertsPath;
+const host = process.env.HOST || apiconfig.server.host;
+const port = process.env.PORT || apiconfig.server.port;
 const protocol = sslEnabled ? 'https' : 'http';
 
 /**
@@ -70,9 +70,9 @@ class Broadcaster extends WebSocket.Server {
 	}
 }
 
-let server;
-let explorer;
-async function startExplorer() {
+let server: http.Server | https.Server;
+let explorer: Explorer;
+async function start() {
 	explorer = new Explorer();
 
 	// Application headers
@@ -125,7 +125,7 @@ async function startExplorer() {
 	});
 }
 
-startExplorer();
+start();
 /* eslint-disable */
 let connections = [];
 server.on('connection', connection => {

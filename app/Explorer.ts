@@ -9,7 +9,7 @@ import compression from 'compression';
 import passport from 'passport';
 import RateLimit from 'express-rate-limit';
 import { PlatformBuilder } from './platform/PlatformBuilder';
-import explorerconfig from './explorerconfig.json';
+import apiconfig from './apiconfig.json';
 import { PersistenceFactory } from './persistence/PersistenceFactory';
 import { authroutes } from './rest/authroutes';
 import { dbroutes } from './rest/dbroutes';
@@ -83,21 +83,21 @@ export class Explorer {
 	 * @memberof Explorer
 	 */
 	async initialize(broadcaster) {
-		if (!explorerconfig[explorerConst.PERSISTENCE]) {
+		if (!apiconfig[explorerConst.PERSISTENCE]) {
 			throw new ExplorerError(explorerError.ERROR_1001);
 		}
-		if (!explorerconfig[explorerconfig[explorerConst.PERSISTENCE]]) {
+		if (!apiconfig[apiconfig[explorerConst.PERSISTENCE]]) {
 			throw new ExplorerError(
 				explorerError.ERROR_1002,
-				explorerconfig[explorerConst.PERSISTENCE]
+				apiconfig[explorerConst.PERSISTENCE]
 			);
 		}
 		this.persistence = await PersistenceFactory.create(
-			explorerconfig[explorerConst.PERSISTENCE],
-			explorerconfig[explorerconfig[explorerConst.PERSISTENCE]]
+			apiconfig[explorerConst.PERSISTENCE],
+			apiconfig[apiconfig[explorerConst.PERSISTENCE]]
 		);
 
-		for (const pltfrm of explorerconfig[explorerConst.PLATFORMS]) {
+		for (const pltfrm of apiconfig[explorerConst.PLATFORMS]) {
 			const platform = await PlatformBuilder.build(
 				pltfrm,
 				this.persistence,
@@ -135,7 +135,7 @@ export class Explorer {
 			this.app.use('/api/ops/fabric', opsrouter);
 
 			// Initializing sync listener
-			platform.initializeListener(explorerconfig.sync);
+			platform.initializeListener(apiconfig.sync);
 
 			this.platforms.push(platform);
 		}

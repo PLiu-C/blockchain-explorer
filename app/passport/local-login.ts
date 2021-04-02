@@ -7,7 +7,7 @@ import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 import { Strategy } from 'passport-local';
 import { User } from '../platform/fabric/models/User';
-import config from '../explorerconfig.json';
+import config from '../apiconfig.json';
 
 const jwtSignAsync = promisify<
 	Record<string, any>,

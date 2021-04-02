@@ -16,6 +16,8 @@ import { explorerError } from '../../../common/ExplorerMessage';
 import * as FabricConst from '../utils/FabricConst';
 import * as FabricUtils from '../utils/FabricUtils';
 
+import type { FabricClient, Persist } from '../../../types';
+
 const logger = helper.getLogger('SyncPlatform');
 
 const fabric_const = FabricConst.fabric.const;
@@ -30,11 +32,11 @@ const config_path = path.resolve(__dirname, '../config.json');
 export class SyncPlatform {
 	network_id: string;
 	network_name: string;
-	client: any;
-	eventHub: any;
+	client: FabricClient;
+	eventHub: FabricEvent;
 	sender: any;
-	persistence: any;
-	syncService: any;
+	persistence: Persist;
+	syncService: SyncServices;
 	blocksSyncTime: number;
 	network_config: Record<string, any>;
 
@@ -44,12 +46,12 @@ export class SyncPlatform {
 	 * @param {*} sender
 	 * @memberof SyncPlatform
 	 */
-	constructor(persistence: any, sender: any) {
+	constructor(persistence: Persist, sender: any) {
 		this.network_id = null;
 		this.network_name = null;
 		this.client = null;
 		this.eventHub = null;
-		this.sender = sender;
+		this.sender = sender;  // sender send message to parent process (i.e., explorer)
 		this.persistence = persistence;
 		this.syncService = new SyncServices(this, this.persistence);
 		this.blocksSyncTime = 60000;
@@ -91,7 +93,7 @@ export class SyncPlatform {
 		logger.debug('Blocks synch interval time >> %s', this.blocksSyncTime);
 
 		this.network_config = network_configs[this.network_id];
-		const config = new FabricConfig();
+		const config = new FabricConfig();  // For connection_profile
 		config.initialize(this.network_id, this.network_config);
 
 		this.client = await FabricUtils.createFabricClient(config);

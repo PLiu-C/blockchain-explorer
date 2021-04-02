@@ -160,7 +160,7 @@ export class PgService {
 	 * @returns
 	 * @memberof PgService
 	 */
-	saveRow(tablename, columnValues) {
+	saveRow(tablename, columnValues): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const addSqlParams = [];
 			const updatesqlcolumn = [];
@@ -211,7 +211,7 @@ export class PgService {
 	 * @author vchinoy
 	 *
 	 */
-	updateRowByPk(tablename, columnAndValue, pkName, pkValue) {
+	updateRowByPk(tablename, columnAndValue, pkName, pkValue): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const addSqlParams = [];
 			const updateParms = [];
@@ -267,7 +267,7 @@ export class PgService {
 	 * @author vchinoy
 	 *
 	 */
-	updateRow(tablename, columnAndValue, condition) {
+	updateRow(tablename, columnAndValue, condition): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const addSqlParams = [];
 			const updateParms = [];
@@ -316,7 +316,7 @@ export class PgService {
 	 *  @param string  updateSql   the execute sql
 	 *  @param string  values   sql query parameters
 	 */
-	updateBySql(updateSql, values) {
+	updateBySql(updateSql, values): Promise<any> {
 		return new Promise((resolve, reject) => {
 			logger.debug(`update sql is :  ${updateSql}`);
 
@@ -349,7 +349,7 @@ export class PgService {
 	 *
 	 *
 	 */
-	getRowByPk(tablename, column, pkColumn, value) {
+	getRowByPk(tablename, column, pkColumn, value): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (column === '') {
 				column = '*';
@@ -381,7 +381,7 @@ export class PgService {
 	 * @param unknown_type DB
 	 * @return unknown
 	 */
-	getRowByPkOne(sql, values) {
+	getRowByPkOne(sql, values): Promise<any> {
 		return new Promise((resolve, reject) => {
 			this.client.query(sql, values, (err, res) => {
 				if (err) {
@@ -407,7 +407,7 @@ export class PgService {
 	 * @param String limit      the page limit.
 	 *
 	 */
-	getRowsByCondition(tablename, column, condition, orderBy, limit) {
+	getRowsByCondition(tablename, column, condition, orderBy, limit): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (column === '') {
 				column = '*';
@@ -443,7 +443,7 @@ export class PgService {
 	 * @param datatype limit         the page limit.
 	 *
 	 */
-	getRowsBySQl(sqlcharacter, condition, limit) {
+	getRowsBySQl(sqlcharacter, condition, limit): Promise<any> {
 		return new Promise((resolve, reject) => {
 			let updatewhereparm = ' (1=1)  ';
 			const addSqlParams = [];
@@ -481,7 +481,7 @@ export class PgService {
 	 * @returns
 	 * @memberof PgService
 	 */
-	getRowsBySQlQuery(sql, values) {
+	getRowsBySQlQuery(sql, values): Promise<any> {
 		return new Promise((resolve, reject) => {
 			this.client.query(sql, values, (err, res) => {
 				if (err) {
@@ -539,12 +539,12 @@ export class PgService {
 	}
 
 	/**
-	 * 自动橱窗日志查找/评价历史记录查找
-	 * @param unknown_type sql
-	 * @param unknown_type values
+	 * Get rows given a SQL
+	 * @param {string} sql
+	 * @param {any[]} values
 	 * @return unknown
 	 */
-	getRowsBySQlCase(sql, values) {
+	getRowsBySQlCase(sql, values): Promise<any> {
 		return new Promise((resolve, reject) => {
 			this.client.query(sql, values, (err, res) => {
 				if (err) {

@@ -4,9 +4,9 @@
 ## Configure HTTPS to Hyperledger Explorer
 
 
-#### Configure appconfig.json
+#### Configure apiconfig.json
 
-- Edit file blockchain-explorer/appconfig.json
+- Edit file blockchain-explorer/apiconfig.json
 - Update config options
   - sslEnabled : true | false, to enable, or disable HTTPS.
   - sslCertsPath: "ssl-certs", by default it is in root of the project.

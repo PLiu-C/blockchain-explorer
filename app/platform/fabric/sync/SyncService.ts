@@ -13,6 +13,8 @@ import { explorerError } from '../../../common/ExplorerMessage';
 import * as FabricConst from '../../../platform/fabric/utils/FabricConst';
 import * as FabricUtils from '../../../platform/fabric/utils/FabricUtils';
 
+import type { FabricClient, Persist, SyncPlatform } from '../../../types';
+
 const logger = helper.getLogger('SyncServices');
 
 const fabric_const = FabricConst.fabric.const;
@@ -30,8 +32,8 @@ for (const key in fabprotos.protos.TxValidationCode) {
  * @class SyncServices
  */
 export class SyncServices {
-	persistence: any;
-	platform: any;
+	persistence: Persist;
+	platform: SyncPlatform;
 	synchInProcess: string[];
 	blocksInProcess: string[];
 
@@ -41,7 +43,7 @@ export class SyncServices {
 	 * @param {*} persistence
 	 * @memberof SyncServices
 	 */
-	constructor(platform, persistence) {
+	constructor(platform: SyncPlatform, persistence: Persist) {
 		this.platform = platform;
 		this.persistence = persistence;
 		this.synchInProcess = [];
@@ -63,7 +65,7 @@ export class SyncServices {
 	 * @returns
 	 * @memberof SyncServices
 	 */
-	async synchNetworkConfigToDB(client) {
+	async synchNetworkConfigToDB(client: FabricClient) {
 		const channels = client.getChannels();
 		const channels_query = await client.fabricGateway.queryChannels();
 		if (!channels_query) {
@@ -354,7 +356,7 @@ export class SyncServices {
 			.saveChaincodPeerRef(network_id, chaincode_peer_row);
 	}
 
-	async synchBlocks(client, channel_name) {
+	async synchBlocks(client: FabricClient, channel_name: string) {
 		const network_id = client.getNetworkId();
 
 		const synch_key = `${network_id}_${channel_name}`;
@@ -367,7 +369,8 @@ export class SyncServices {
 		// Get channel information from ledger
 		const channelInfo = await client.fabricGateway.queryChainInfo(channel_name);
 		const channel_genesis_hash = client.getChannelGenHash(channel_name);
-		const blockHeight = parseInt(channelInfo.height.low) - 1;
+
+		const blockHeight = (channelInfo.height as Long).toNumber() - 1;
 		// Query missing blocks from DB
 		const results = await this.persistence
 			.getMetricService()
@@ -443,7 +446,7 @@ export class SyncServices {
 	 * @returns
 	 * @memberof SyncServices
 	 */
-	async processBlockEvent(client, block) {
+	async processBlockEvent(client: FabricClient, block) {
 		const network_id = client.getNetworkId();
 		// Get the first transaction
 		const first_tx = block.data.data[0];

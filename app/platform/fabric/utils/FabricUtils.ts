@@ -11,11 +11,13 @@ import { FabricClient } from '../FabricClient';
 import { ExplorerError } from '../../../common/ExplorerError';
 import { explorerError } from '../../../common/ExplorerMessage';
 
+import type { FabricConfig, Persist } from '../../../types';
+
 import { helper } from '../../../common/helper';
 
 const logger = helper.getLogger('FabricUtils');
 
-export async function createFabricClient(config, persistence?) {
+export async function createFabricClient(config: FabricConfig, persistence?: Persist) {
 	// Create new FabricClient
 	const client = new FabricClient(config);
 	// Initialize fabric client

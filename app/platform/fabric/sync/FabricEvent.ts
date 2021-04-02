@@ -2,6 +2,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { FabricClient, SyncServices } from '../../../types';
+import type { BlockListener } from 'fabric-network';
+
+
 import {helper} from '../../../common/helper';
 
 const logger = helper.getLogger('FabricEvent');
@@ -13,9 +17,9 @@ const logger = helper.getLogger('FabricEvent');
  */
 export class FabricEvent {
 
-	client : any;
-	fabricServices : any;
-	static channelEventHubs : any;
+	client : FabricClient;
+	fabricServices : SyncServices;
+	static channelEventHubs : Map<string, BlockListener>;
 
 	/**
 	 * Creates an instance of FabricEvent.
@@ -23,7 +27,7 @@ export class FabricEvent {
 	 * @param {*} fabricServices
 	 * @memberof FabricEvent
 	 */
-	constructor(client, fabricServices) {
+	constructor(client: FabricClient, fabricServices: SyncServices) {
 		this.client = client;
 		this.fabricServices = fabricServices;
 	}
@@ -57,12 +61,16 @@ export class FabricEvent {
 	 * @param {*} channel
 	 * @memberof FabricEvent
 	 */
-	async createChannelEventHub(channel_name) {
+	async createChannelEventHub(channel_name: string) {
 		// Create channel event hub
 		try {
 			const network = await this.client.fabricGateway.gateway.getNetwork(
 				channel_name
 			);
+			let startBlock = await this.fabricServices.getPersistence().getCrudService().getCurBlockNum(
+				this.client.getNetworkId(), this.client.getChannelGenHash(channel_name)
+			);
+			startBlock = startBlock-1 < 1 ? 1 : startBlock-1;  // have some redundancy
 			const listener = await network.addBlockListener(
 				async event => {
 					// Skip first block, it is process by peer event hub
@@ -71,7 +79,7 @@ export class FabricEvent {
 					}
 				},
 				{
-					startBlock: 1,
+					startBlock,
 					type: 'full'
 				}
 			);
@@ -91,7 +99,7 @@ export class FabricEvent {
 	 * @param {*} channel_name
 	 * @memberof FabricEvent
 	 */
-	async connectChannelEventHub(channel_name) {
+	async connectChannelEventHub(channel_name: string) {
 		try {
 			await this.createChannelEventHub(channel_name);
 		} catch (err) {
@@ -106,7 +114,7 @@ export class FabricEvent {
 	 * @returns
 	 * @memberof FabricEvent
 	 */
-	isChannelEventHubConnected(channel_name) {
+	isChannelEventHubConnected(channel_name: string) {
 		const listener = FabricEvent.channelEventHubs.get(channel_name);
 		if (listener) {
 			return true;
@@ -121,7 +129,7 @@ export class FabricEvent {
 	 * @returns
 	 * @memberof FabricEvent
 	 */
-	async disconnectChannelEventHub(channel_name) {
+	async disconnectChannelEventHub(channel_name: string) {
 		logger.debug('disconnectChannelEventHub(' + channel_name + ')');
 		const listener = FabricEvent.channelEventHubs.get(channel_name);
 		const network = await this.client.fabricGateway.gateway.getNetwork(

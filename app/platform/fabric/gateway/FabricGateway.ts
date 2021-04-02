@@ -21,7 +21,7 @@ const logger = helper.getLogger('FabricGateway');
 export class FabricGateway {
 	fabricConfig: any;
 	config: any;
-	gateway: any;
+	gateway: Gateway;
 	wallet: any;
 	tlsEnable: boolean;
 	defaultChannelName: string;

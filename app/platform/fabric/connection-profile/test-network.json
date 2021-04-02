@@ -40,7 +40,7 @@
 		"Org1MSP": {
 			"mspid": "Org1MSP",
 			"adminPrivateKey": {
-				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/keystore/2e745da2709d8b95ab868b970584bb00329b80389960476d216aa0cb0db59800_sk"
+				"path": "/home/pliu/git/FabTool/crypto-config/peerOrganizations/blockchain.ccb.com/users/Admin@blockchain.ccb.com/msp/keystore/884edf19a3ffa75a6fa97af9989a4fa449ed29fed14be63b37606684cf358e88_sk"
 			},
 			"peers": ["peer0.blockchain.ccb.com", "peer1.blockchain.ccb.com"],
 			"signedCert": {
